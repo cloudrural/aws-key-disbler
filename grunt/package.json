@@ -1,0 +1,81 @@
+{
+  "name": "key_disabler",
+  "version": "1.0.24",
+  "description": "Lambda helper functions",
+  "main": "Gruntfile.js",
+  "dependencies": {
+    "grunt": "^1.3.0",
+    "grunt-cli": "^1.3.2",
+    "grunt-contrib-jshint": "^3.0.0",
+    "grunt-contrib-watch": "^1.1.0",
+    "grunt-exec": "^3.0.0",
+    "grunt-jsbeautifier": "^0.2.13"
+  },
+  "devDependencies": {
+    "grunt-bumpup": "^0.6.3",
+    "grunt-contrib-rename": "^0.2.0",
+    "grunt-replace": "^1.0.1"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "license": "ISC",
+  "key_disabler": {
+    "aws_account_name": "sandbox-devops",
+    "aws_account_id": "314945786589",
+    "keystates": {
+      "young": {
+        "message": "is still valid"
+      },
+      "first_warning": {
+        "days": 83,
+        "message": "is due to expire in 1 week (7 days) - Please rotate your IAM Access key if you have access to AWS console or else reach to SRE"
+      },
+      "last_warning": {
+        "days": 89,
+        "message": "is due to expire in 1 day (tomorrow) - Please rotate your IAM Access key if you have access to AWS console or else reach to SRE"
+      },
+      "expired": {
+        "days": 90,
+        "message": "is now EXPIRED! - Please rotate your IAM Access key if you have access to AWS console or else reach to SRE"
+      }
+    },
+    "email": {
+      "from": "devops@poshmark.com",
+      "admin": {
+        "enabled": "True",
+        "to": "devops@poshmark.com"
+      },
+      "user": {
+        "enabled": "True",
+        "emailaddressconfig": {
+          "type": "tag",
+          "tagname": "email",
+          "reportmissingtag": "True"
+        }
+      }
+    },
+    "iam": {
+      "skip_sernames": [
+        "username1",
+        "username2"
+      ],
+      "lambda": {
+        "rolename": "LambdaAccessKeyRotationRole",
+        "policyname": "LambdaAccessKeyRotationPolicy"
+      }
+    },
+    "lambda": {
+      "function_name": "AccessKeyRotation",
+      "memory": "128",
+      "timeout": "600",
+      "deployment_region": "us-east-1",
+      "schedule": {
+        "rulename": "EveryDay9amIST",
+        "description": "Runs every day at 9am IST",
+        "expression": "cron(30 3 * * ? *)"
+      }
+    },
+    "mask_accesskey_length": "16"
+  }
+}
